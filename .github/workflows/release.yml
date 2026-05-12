@@ -58,6 +58,9 @@ jobs:
       - name: Build package
         run: flit build
 
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1 # Uses OIDC Trusted Publishing — no PYPI_API_TOKEN needed
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
@@ -65,7 +68,3 @@ jobs:
           name: v${{ needs.check-version.outputs.version }}
           generate_release_notes: true
           files: dist/*
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1 # Uses OIDC Trusted Publishing — no PYPI_API_TOKEN needed
-        
