@@ -17,6 +17,12 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0  # need full history for tags
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
 
       - name: Get version from pyproject.toml
         id: get_version
@@ -26,8 +32,9 @@ jobs:
 
       - name: Check if tag already exists
         id: check
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
-          VERSION=${{ steps.get_version.outputs.version }}
           if git rev-parse "v$VERSION" >/dev/null 2>&1; then
             echo "Tag v$VERSION already exists, skipping release."
             echo "should_release=false" >> $GITHUB_OUTPUT
@@ -46,6 +53,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v6
